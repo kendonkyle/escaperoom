@@ -36,14 +36,25 @@ export class CameraScanner implements CodeScanner {
     if (this.running) return;
     this.running = true;
 
-    this.stream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: { ideal: "environment" },
-        width: { ideal: 1280 },
-        height: { ideal: 720 },
-      },
-      audio: false,
-    });
+    const requestedFacing = { ideal: "user" as const };
+    const fallbackFacing = { ideal: "environment" as const };
+
+    const getStream = async (facingMode: { ideal: "user" | "environment" }) =>
+      navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode,
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+        },
+        audio: false,
+      });
+
+    try {
+      this.stream = await getStream(requestedFacing);
+    } catch (err) {
+      console.warn("Front camera unavailable, falling back to rear camera", err);
+      this.stream = await getStream(fallbackFacing);
+    }
 
     this.video.srcObject = this.stream;
     this.video.playsInline = true;
