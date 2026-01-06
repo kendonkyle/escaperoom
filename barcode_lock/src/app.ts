@@ -76,7 +76,9 @@ function createLayout(root: HTMLElement) {
 }
 
 function playAccessDeniedTone() {
-  const audioPath = "/assets/sounds/access-denied-1.mp3"; // adjust if the filename differs
+  const audioPath = `${
+    import.meta.env.BASE_URL
+  }assets/sounds/access-denied-1.mp3`;
   try {
     if (typeof window === "undefined") return;
     if (navigator.userAgent?.includes("jsdom")) return;
@@ -123,7 +125,9 @@ function playAccessDeniedTone() {
 }
 
 function playAccessGrantedTone() {
-  const audioPath = "/assets/sounds/access-granted.mp3";
+  const audioPath = `${
+    import.meta.env.BASE_URL
+  }assets/sounds/access-granted.mp3`;
   try {
     if (typeof window === "undefined") return;
     if (navigator.userAgent?.includes("jsdom")) return;
